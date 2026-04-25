@@ -5,18 +5,33 @@
     "version": "0.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
+    "backgroundColor": "#ffffff",
+    "primaryColor": "#0f172a",
     "scheme": "sdrsrn",
     "platforms": ["ios", "android"],
     "assetBundlePatterns": ["**/*"],
+    "androidStatusBar": {
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content",
+      "translucent": false
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content"
+    },
     "ios": {
       "bundleIdentifier": "com.bicheondev.sdrsrn",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.bicheondev.sdrsrn"
+      "package": "com.bicheondev.sdrsrn",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
     },
     "extra": {
-      "phase": "phase-2-router-autodetect-fix",
+      "phase": "phase-3-android-eas-builds",
       "router": {
         "root": "app"
       }
