@@ -149,6 +149,34 @@ export function findClosestElement(node, selector) {
   return isHostElement(node) ? node.closest(selector) : null;
 }
 
+export function escapeCssIdentifier(value) {
+  const rawValue = String(value ?? '');
+
+  if (typeof CSS !== 'undefined' && CSS.escape) {
+    return CSS.escape(rawValue);
+  }
+
+  return rawValue.replace(/["\\]/g, '\\$&');
+}
+
+export function capturePointer(element, pointerId) {
+  try {
+    element?.setPointerCapture?.(pointerId);
+  } catch {
+    // Pointer capture is a browser enhancement; gestures still work without it.
+  }
+}
+
+export function releasePointerCapture(element, pointerId) {
+  try {
+    if (element?.hasPointerCapture?.(pointerId) ?? true) {
+      element?.releasePointerCapture?.(pointerId);
+    }
+  } catch {
+    // The pointer may already be released when a gesture is cancelled.
+  }
+}
+
 export function blurFocusedDescendant(element) {
   const activeElement = getDocument()?.activeElement;
 

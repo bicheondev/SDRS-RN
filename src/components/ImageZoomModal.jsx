@@ -4,6 +4,8 @@ import { motionDurationsMs, motionTokens } from '../motion.js';
 import { useReducedMotionSafe } from '../hooks/useReducedMotionSafe.js';
 import {
   addWindowEventListener,
+  capturePointer,
+  escapeCssIdentifier,
   findClosestElement,
   getComputedStyleValue,
   getElementRectSnapshot,
@@ -13,6 +15,7 @@ import {
   isHostElement,
   querySelector,
   querySelectorAll,
+  releasePointerCapture,
   removeElementDataAttribute,
   setElementDataAttribute,
 } from '../platform/index.js';
@@ -89,13 +92,7 @@ async function measureRect(node) {
 }
 
 function escapeAttributeValue(value) {
-  const rawValue = String(value ?? '');
-
-  if (typeof CSS !== 'undefined' && CSS.escape) {
-    return CSS.escape(rawValue);
-  }
-
-  return rawValue.replace(/["\\]/g, '\\$&');
+  return escapeCssIdentifier(value);
 }
 
 function findVisibleThumbnailTarget(vesselId) {
@@ -761,7 +758,7 @@ export default function ImageZoomModal({ session, onClose }) {
       return;
     }
 
-    event.currentTarget?.setPointerCapture?.(pointer.pointerId);
+    capturePointer(event.currentTarget, pointer.pointerId);
     pointersRef.current.set(pointer.pointerId, pointer);
 
     if (pointersRef.current.size >= 2) {
@@ -877,9 +874,7 @@ export default function ImageZoomModal({ session, onClose }) {
       return;
     }
 
-    if (event.currentTarget?.hasPointerCapture?.(pointer.pointerId)) {
-      event.currentTarget.releasePointerCapture(pointer.pointerId);
-    }
+    releasePointerCapture(event.currentTarget, pointer.pointerId);
 
     const activePointerCount = pointersRef.current.size;
     const currentGesture = gestureRef.current;

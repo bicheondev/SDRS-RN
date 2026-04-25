@@ -4,14 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "audit:browser-apis": "node scripts/audit-browser-apis.mjs",
+    "audit:data": "node scripts/audit-data.mjs",
+    "audit:dom": "node scripts/audit-dom-removal.mjs",
     "dev": "vite",
     "build": "vite build",
-    "check:bundled-data": "node scripts/check-native-readiness.mjs --bundled-data",
-    "check:dom": "node scripts/check-native-readiness.mjs --dom",
+    "check:bundled-data": "npm run audit:data",
+    "check:dom": "npm run audit:dom",
     "check:native-readiness": "node scripts/check-native-readiness.mjs",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "validate": "npm run audit:dom && npm run audit:data && npm run audit:browser-apis && npm run test:run && npm run build"
   },
   "dependencies": {
     "es-hangul": "^2.3.8",

@@ -1,5 +1,5 @@
 export { buildDatabaseExportBlob } from './databaseExport.js';
-export { DEFAULT_BUNDLED_FILES, loadBundledDatabaseState } from './bundledData.js';
+export { loadBundledDatabaseStateFromFiles } from './bundledData.js';
 export {
   arrayBufferToDataUrl,
   buildImagesArchive,

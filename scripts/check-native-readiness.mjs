@@ -1,90 +1,28 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
-const rootDir = process.cwd();
 const args = new Set(process.argv.slice(2));
-const runDomCheck = args.size === 0 || args.has('--dom');
-const runBundledDataCheck = args.size === 0 || args.has('--bundled-data');
-const sourceExtensions = new Set(['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']);
-const requiredBundledFiles = ['ship.csv', 'images.zip', 'no-image.svg'];
-const useDomDirectivePattern = /(^|\n)\s*['"]use dom['"]\s*;?/;
-const domImportPattern =
-  /(?:from\s*['"]|import\s*\(\s*['"]|require\s*\(\s*['"])(?:\.\.?\/)+dom(?:\/|['"]|\))/;
+const checks = [];
 
-function fail(message) {
-  console.error(message);
-  process.exitCode = 1;
+if (args.size === 0 || args.has('--dom')) {
+  checks.push('scripts/audit-dom-removal.mjs');
 }
 
-function getExtension(filePath) {
-  const lastDot = filePath.lastIndexOf('.');
-  return lastDot === -1 ? '' : filePath.slice(lastDot);
+if (args.size === 0 || args.has('--bundled-data')) {
+  checks.push('scripts/audit-data.mjs');
 }
 
-function walkSourceFiles(dir) {
-  const files = [];
-
-  for (const entry of readdirSync(dir)) {
-    const fullPath = join(dir, entry);
-    const stats = statSync(fullPath);
-
-    if (stats.isDirectory()) {
-      files.push(...walkSourceFiles(fullPath));
-      continue;
-    }
-
-    if (stats.isFile() && sourceExtensions.has(getExtension(fullPath))) {
-      files.push(fullPath);
-    }
-  }
-
-  return files;
+if (args.size === 0 || args.has('--browser-apis')) {
+  checks.push('scripts/audit-browser-apis.mjs');
 }
 
-function checkDomBoundary() {
-  const domDir = join(rootDir, 'src', 'dom');
+for (const scriptPath of checks) {
+  const result = spawnSync(process.execPath, [scriptPath], {
+    stdio: 'inherit',
+  });
 
-  if (existsSync(domDir)) {
-    fail('src/dom still exists. Remove the DOM wrapper directory before merging.');
-  }
-
-  const sourceDir = join(rootDir, 'src');
-  const violations = [];
-
-  for (const filePath of walkSourceFiles(sourceDir)) {
-    const source = readFileSync(filePath, 'utf8');
-    const relativePath = relative(rootDir, filePath);
-
-    if (useDomDirectivePattern.test(source)) {
-      violations.push(`${relativePath}: contains use dom directive`);
-    }
-
-    if (domImportPattern.test(source) || source.includes('src/dom')) {
-      violations.push(`${relativePath}: references src/dom`);
-    }
-  }
-
-  if (violations.length > 0) {
-    fail(`DOM wrapper references found:\n${violations.map((entry) => `- ${entry}`).join('\n')}`);
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
   }
 }
 
-function checkBundledData() {
-  const missing = requiredBundledFiles.filter((fileName) => !existsSync(join(rootDir, fileName)));
-
-  if (missing.length > 0) {
-    fail(`Required bundled data files are missing: ${missing.join(', ')}`);
-  }
-}
-
-if (runDomCheck) {
-  checkDomBoundary();
-}
-
-if (runBundledDataCheck) {
-  checkBundledData();
-}
-
-if (!process.exitCode) {
-  console.log('Native port readiness checks passed.');
-}
+console.log('Native port readiness checks passed.');

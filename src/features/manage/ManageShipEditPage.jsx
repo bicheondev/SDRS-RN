@@ -17,7 +17,12 @@ import { InteractivePressable } from '../../components/primitives/InteractivePre
 import { AppText as Text, AppTextInput as TextInput } from '../../components/primitives/AppTypography.jsx';
 import { useReducedMotionSafe } from '../../hooks/useReducedMotionSafe.js';
 import { motionDurationsMs, motionTokens } from '../../motion.js';
-import { getComputedStyleValue, getElementRectSnapshot } from '../../platform/index.js';
+import {
+  capturePointer,
+  getComputedStyleValue,
+  getElementRectSnapshot,
+  releasePointerCapture,
+} from '../../platform/index.js';
 import {
   buildSearchIndex,
   compileSearchQuery,
@@ -895,11 +900,7 @@ function ManageShipReorderItem({
     pointerStartRef.current = { x: point.pageX, y: point.pageY };
     dragStartedRef.current = false;
 
-    try {
-      event.currentTarget.setPointerCapture?.(pointerId);
-    } catch {
-      // Pointer capture is a browser enhancement; drag still works without it.
-    }
+    capturePointer(event.currentTarget, pointerId);
 
     longPressTimerRef.current = setTimeout(() => {
       if (pointerIdRef.current !== pointerId) {
@@ -948,11 +949,7 @@ function ManageShipReorderItem({
 
     const point = getEventPoint(event);
 
-    try {
-      event.currentTarget.releasePointerCapture?.(pointerId);
-    } catch {
-      // The pointer may already be released when a gesture is cancelled.
-    }
+    releasePointerCapture(event.currentTarget, pointerId);
 
     if (dragStartedRef.current) {
       onDragEnd({ cardId: card.id, clientY: point.pageY });
