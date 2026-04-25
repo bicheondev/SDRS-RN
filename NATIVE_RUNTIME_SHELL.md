@@ -7,6 +7,7 @@ Phase 1 adds an Expo runtime shell around the existing React Native Web app with
 - `package.json` points Expo at `src/native/AppEntry.js`.
 - `src/native/AppEntry.js` installs small `atob`/`btoa` polyfills used by existing import/export domain code, then registers `NativeRuntimeShell`.
 - `src/native/NativeRuntimeShell.jsx` preloads bundled fonts and renders the existing `RnwApp`.
+- `app.json` sets `expo.extra.router.root` to `app` so Expo CLI does not auto-detect the existing `src/app` RNW shell as an Expo Router route directory.
 
 ## Metro Boundary
 

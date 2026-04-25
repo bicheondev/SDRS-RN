@@ -16,7 +16,10 @@
       "package": "com.bicheondev.sdrsrn"
     },
     "extra": {
-      "phase": "phase-1-native-shell"
+      "phase": "phase-2-router-autodetect-fix",
+      "router": {
+        "root": "app"
+      }
     }
   }
 }
