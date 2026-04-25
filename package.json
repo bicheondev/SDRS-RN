@@ -3,11 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "src/native/AppEntry.js",
   "scripts": {
     "audit:browser-apis": "node scripts/audit-browser-apis.mjs",
     "audit:data": "node scripts/audit-data.mjs",
     "audit:dom": "node scripts/audit-dom-removal.mjs",
     "dev": "vite",
+    "native:start": "expo start",
+    "native:android": "expo run:android",
+    "native:ios": "expo run:ios",
     "build": "vite build",
     "check:bundled-data": "npm run audit:data",
     "check:dom": "npm run audit:dom",
@@ -18,11 +22,18 @@
     "validate": "npm run audit:dom && npm run audit:data && npm run audit:browser-apis && npm run test:run && npm run build"
   },
   "dependencies": {
+    "babel-preset-expo": "~54.0.10",
     "es-hangul": "^2.3.8",
+    "expo": "~54.0.33",
+    "expo-asset": "~12.0.12",
+    "expo-document-picker": "~14.0.8",
+    "expo-file-system": "~19.0.21",
+    "expo-font": "~14.0.11",
+    "expo-sharing": "~14.0.8",
     "jszip": "^3.10.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-native": "^0.81.5",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
     "react-native-web": "^0.21.2"
   },
   "devDependencies": {

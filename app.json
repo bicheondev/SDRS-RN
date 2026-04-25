@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "SDRS RN",
+    "slug": "sdrs-rn",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "sdrsrn",
+    "platforms": ["ios", "android"],
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.bicheondev.sdrsrn",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.bicheondev.sdrsrn"
+    },
+    "extra": {
+      "phase": "phase-1-native-shell"
+    }
+  }
+}
