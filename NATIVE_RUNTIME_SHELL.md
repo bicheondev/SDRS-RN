@@ -6,7 +6,7 @@ Phase 1 adds an Expo runtime shell around the existing React Native Web app with
 
 - `package.json` points Expo at `src/native/AppEntry.js`.
 - `src/native/AppEntry.js` installs small `atob`/`btoa` polyfills used by existing import/export domain code, then registers `NativeRuntimeShell`.
-- `src/native/NativeRuntimeShell.jsx` preloads bundled fonts and renders the existing `RnwApp`.
+- `src/native/NativeRuntimeShell.jsx` currently renders a visible native diagnostic screen before the real SDRS UI is mounted.
 - `app.json` sets `expo.extra.router.root` to `app` so Expo CLI does not auto-detect the existing `src/app` RNW shell as an Expo Router route directory.
 
 ## Metro Boundary
@@ -22,7 +22,7 @@ This keeps `src/features/**`, `src/components/**`, and `src/app/**` unchanged fo
 
 ## Remaining Native Parity Work
 
-The Expo shell does not redesign or simplify the UI. Later phases still need explicit native treatment for web-only style values, DOM-based zoom/reorder measurements, and screen/component parity validation on devices.
+The Expo shell does not redesign or simplify the UI. The Phase 4 preview APK diagnostic intentionally does not mount `RnwApp` yet; this avoids a white screen with no fallback while the native-safe mount path is identified. Later phases still need explicit native treatment for web-only style values, DOM-based zoom/reorder measurements, and screen/component parity validation on devices.
 
 ## Android EAS Builds
 
