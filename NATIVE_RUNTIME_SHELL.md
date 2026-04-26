@@ -1,12 +1,13 @@
 # Native Runtime Shell
 
-Phase 1 adds an Expo runtime shell around the existing React Native Web app without editing UI files. Phase 3 prepares Android EAS development and preview builds without changing the existing screen code.
+Phase 1 adds an Expo runtime shell around the existing React Native Web app without editing UI files. Phase 3 prepares Android EAS development and preview builds without changing the existing screen code. Phase 5 mounts the existing RNW app root from the native shell while keeping the diagnostic fallback available.
 
 ## Entry
 
 - `package.json` points Expo at `src/native/AppEntry.js`.
 - `src/native/AppEntry.js` installs small `atob`/`btoa` polyfills used by existing import/export domain code, then registers `NativeRuntimeShell`.
-- `src/native/NativeRuntimeShell.jsx` currently renders a visible native diagnostic screen before the real SDRS UI is mounted.
+- `src/native/NativeRuntimeShell.jsx` loads native fonts, dynamically imports `src/RnwApp.jsx`, and mounts the existing `RnwApp` root behind `ENABLE_REAL_SDRS_APP`.
+- The real app mount is wrapped in an error boundary, and the shell installs a native JS error fallback while mounted. Import, initialization, render, or escaped runtime failures fall back to the diagnostic screen with the native platform, app version, font state, runtime status, and error message.
 - `app.json` sets `expo.extra.router.root` to `app` so Expo CLI does not auto-detect the existing `src/app` RNW shell as an Expo Router route directory.
 
 ## Metro Boundary
@@ -22,7 +23,7 @@ This keeps `src/features/**`, `src/components/**`, and `src/app/**` unchanged fo
 
 ## Remaining Native Parity Work
 
-The Expo shell does not redesign or simplify the UI. The Phase 4 preview APK diagnostic intentionally does not mount `RnwApp` yet; this avoids a white screen with no fallback while the native-safe mount path is identified. Later phases still need explicit native treatment for web-only style values, DOM-based zoom/reorder measurements, and screen/component parity validation on devices.
+The Expo shell does not redesign or simplify the UI. Phase 5 mounts the existing `RnwApp` root without changing `src/features/**`, `src/components/**`, `src/app/**`, screen styles, design tokens, or animation files. Later phases still need explicit native treatment for web-only style values, DOM-based zoom/reorder measurements, and screen/component parity validation on devices.
 
 ## Android EAS Builds
 
