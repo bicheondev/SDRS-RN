@@ -19,7 +19,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run --passWithNoTests",
-    "validate": "npm run audit:dom && npm run audit:data && npm run audit:browser-apis && npm run test:run && npm run build"
+    "validate": "npm run audit:dom && npm run audit:data && npm run audit:browser-apis && npm run test:run && npm run build",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "babel-preset-expo": "~54.0.10",

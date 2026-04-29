@@ -8,8 +8,13 @@
     "backgroundColor": "#ffffff",
     "primaryColor": "#0f172a",
     "scheme": "sdrsrn",
-    "platforms": ["ios", "android"],
-    "assetBundlePatterns": ["**/*"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "androidStatusBar": {
       "backgroundColor": "#ffffff",
       "barStyle": "dark-content",
@@ -34,6 +39,9 @@
       "phase": "phase-3-android-eas-builds",
       "router": {
         "root": "app"
+      },
+      "eas": {
+        "projectId": "429c6bf7-0deb-41a9-982e-6d78cb3e1ca3"
       }
     }
   }
